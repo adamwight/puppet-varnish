@@ -23,6 +23,8 @@ class varnish::params {
       } else {
         $conf_file_path = '/etc/sysconfig/varnish'
       }
+      $service_name = 'varnish'
+      $package_name = 'varnish'
     }
     'Debian': {
       $vcl_reload_script = '/usr/share/varnish/reload-vcl'
@@ -53,11 +55,15 @@ class varnish::params {
         $default_version = '3.0'
 
       }
+      $service_name = 'varnish'
+      $package_name = 'varnish'
     }
     'FreeBSD': {
       $conf_file_path = '/etc/rc.conf.d/varnishd'
       $add_repo = false
-      $default_version ='4.1'
+      $default_version = '4.1'
+      $service_name = 'varnishd'
+      $package_name = 'varnish4'
       # TODO: $group = 'wheel'
     }
     default: {

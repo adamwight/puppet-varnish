@@ -49,7 +49,7 @@ class varnish::shmlog (
     options => $options,
     pass    => '0',
     dump    => '0',
-    notify  => Service['varnishd'],
+    notify  => Service['varnish'],
     require => File['shmlog-dir'],
   }
 }

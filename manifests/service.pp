@@ -23,6 +23,7 @@ class varnish::service (
   $systemd                = $varnish::params::systemd,
   $systemd_conf_path      = $varnish::params::systemd_conf_path,
   $vcl_reload_script      = $varnish::params::vcl_reload_script,
+  $service_name           = $varnish::params::service_name,
 ) inherits varnish::params {
 
   # include install
@@ -43,10 +44,11 @@ class varnish::service (
   }
 
   service {'varnishd':
+    name    => $service_name,
     ensure  => $service_state,
     enable  => $enable,
     restart => $reload_cmd,
-    require => Package[$::varnish::install::package_name],
+    require => Package['varnish'],
   }
 
   $restart_command = $::osfamily ? {
@@ -59,8 +61,8 @@ class varnish::service (
   exec { 'restart-varnish':
     command     => $restart_command,
     refreshonly => true,
-    before      => Service['varnishd'],
-    require     => Package[$::varnish::install::package_name],
+    before      => Service['varnish'],
+    require     => Package['varnish'],
   }
 
   if $systemd {
@@ -70,8 +72,8 @@ class varnish::service (
       ensure  => file,
       content => template('varnish/varnish.service.erb'),
       notify  => Exec['Reload systemd'],
-      before  => [Service['varnishd'], Exec['restart-varnish']],
-      require => Package[$::varnish::install::package_name],
+      before  => [Service['varnish'], Exec['restart-varnish']],
+      require => Package['varnish'],
     }
   }
 }

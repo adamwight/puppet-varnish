@@ -6,7 +6,7 @@ define varnish::vcl::includefile {
     owner   => 'root',
     group   => 'wheel',
     mode    => '0444',
-    notify  => Service['varnishd'],
+    notify  => Service['varnish'],
     require => File[$varnish::vcl::includedir],
     before  => Exec['restart-varnish'],
   }

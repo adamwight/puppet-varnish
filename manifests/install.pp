@@ -17,11 +17,11 @@ class varnish::install (
   $add_repo = true,
   $manage_firewall = false,
   $varnish_listen_port = '6081',
-  $package_name = 'varnish',
+  $package_name = $varnish::params::package_name,
 ) {
   class { 'varnish::repo':
     enable => $add_repo,
-    before => Package[$package_name],
+    before => Package['varnish'],
   }
 
   class { 'varnish::firewall':
@@ -30,7 +30,8 @@ class varnish::install (
   }
 
   # Varnish package
-  package { $package_name:
+  package { 'varnish':
+    name   => $package_name,
     ensure => $varnish::ensure,
   }
 }

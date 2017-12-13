@@ -133,7 +133,7 @@ class varnish (
   if $shmlog_tempfs {
     class { 'varnish::shmlog':
       shmlog_dir => $shmlog_dir,
-      require    => Package[$::varnish::install::package_name],
+      require    => Package['varnish'],
     }
   }
 
@@ -145,7 +145,7 @@ class varnish (
     group   => 'wheel',
     mode    => '0644',
     content => template($varnish_conf_template),
-    require => Package[$::varnish::install::package_name],
+    require => Package['varnish'],
     notify  => Exec['restart-varnish'],
   }
 
@@ -154,6 +154,6 @@ class varnish (
   file { 'storage-dir':
     ensure  => directory,
     path    => $varnish_storage_dir,
-    require => Package[$::varnish::install::package_name],
+    require => Package['varnish'],
   }
 }

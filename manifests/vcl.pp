@@ -84,8 +84,8 @@ class varnish::vcl (
     group   => 'root',
     mode    => '0644',
     content => template($template_vcl),
-    notify  => Service['varnishd'],
-    require => Package[$::varnish::install::package_name],
+    notify  => Service['varnish'],
+    require => Package['varnish'],
   }
 
   if $template == undef or $manage_includes {
@@ -93,7 +93,7 @@ class varnish::vcl (
       ensure  => directory,
       purge   => true,
       recurse => true,
-      require => Package[$::varnish::install::package_name],
+      require => Package['varnish'],
     }
     $includefiles = ['probes', 'backends', 'directors', 'acls', 'backendselection']
 
@@ -107,7 +107,7 @@ class varnish::vcl (
         target  => "${varnish::vcl::includedir}/waf.vcl",
         content => template('varnish/includes/waf.vcl.erb'),
         order   => '02',
-        notify  => Service['varnishd'],
+        notify  => Service['varnish'],
       }
     }
 

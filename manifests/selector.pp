@@ -24,7 +24,7 @@ define varnish::selector(
     target  => "${varnish::vcl::includedir}/backendselection.vcl",
     content => template($template_selector),
     order   => $order,
-    notify  => Service['varnishd'],
+    notify  => Service['varnish'],
   }
 
 }
