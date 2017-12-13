@@ -10,10 +10,10 @@
 # edit that file.
 
 # Should we start varnishd at boot?  Set to "no" to disable.
-START=<%= scope.lookupvar('start') %>
+#varnishd_enable=<%= scope.lookupvar('start') %>
 
 # Maximum number of open files (for ulimit -n)
-NFILES=<%= scope.lookupvar('nfiles') %>
+#NFILES=<%= scope.lookupvar('nfiles') %>
 
 # Maximum locked memory size (for ulimit -l)
 # Used for locking the shared memory log in memory.  If you increase log size,
@@ -27,26 +27,25 @@ MEMLOCK=<%= scope.lookupvar('memlock') %>
 # See varnishd(1) for more information.
 #
 # # Main configuration file. You probably want to change it :)
-VARNISH_VCL_CONF=<%= scope.lookupvar('varnish_vcl_conf') %>
+varnishd_config=<%= scope.lookupvar('varnish_vcl_conf') %>
 #
 # # Default address and port to bind to
 # # Blank address means all IPv4 and IPv6 interfaces, otherwise specify
 # # a host name, an IPv4 dotted quad, or an IPv6 address in brackets.
-VARNISH_LISTEN_ADDRESS=<%= scope.lookupvar('varnish_listen_address') %>
-VARNISH_LISTEN_PORT=<%= scope.lookupvar('varnish_listen_port') %>
+varnishd_listen=<%= scope.lookupvar('varnish_listen_address') %>:<%= scope.lookupvar('varnish_listen_port') %>
 #
 # # Telnet admin interface listen address and port
-VARNISH_ADMIN_LISTEN_ADDRESS=<%= scope.lookupvar('varnish_admin_listen_address') %>
-VARNISH_ADMIN_LISTEN_PORT=<%= scope.lookupvar('varnish_admin_listen_port') %>
+#VARNISH_ADMIN_LISTEN_ADDRESS=<%= scope.lookupvar('varnish_admin_listen_address') %>
+#VARNISH_ADMIN_LISTEN_PORT=<%= scope.lookupvar('varnish_admin_listen_port') %>
 #
 # # The minimum number of worker threads to start
-VARNISH_MIN_THREADS=<%= scope.lookupvar('varnish_min_threads') %>
+#VARNISH_MIN_THREADS=<%= scope.lookupvar('varnish_min_threads') %>
 #
 # # The Maximum number of worker threads to start
-VARNISH_MAX_THREADS=<%= scope.lookupvar('varnish_max_threads') %>
+#VARNISH_MAX_THREADS=<%= scope.lookupvar('varnish_max_threads') %>
 #
 # # Idle timeout for worker threads
-VARNISH_THREAD_TIMEOUT=<%= scope.lookupvar('varnish_thread_timeout') %>
+#VARNISH_THREAD_TIMEOUT=<%= scope.lookupvar('varnish_thread_timeout') %>
 #
 # # Cache file location
 VARNISH_STORAGE_FILE=<%= scope.lookupvar('varnish_storage_file') %>
@@ -60,17 +59,10 @@ VARNISH_SECRET_FILE=<%= scope.lookupvar('varnish_secret_file') %>
 # 
 # # Backend storage specification
 <% if scope.lookupvar('storage_type') == 'malloc' %>
-VARNISH_STORAGE="<%= scope.lookupvar('storage_type') %>,${VARNISH_STORAGE_SIZE}"
+varnishd_storage="<%= scope.lookupvar('storage_type') %>,${VARNISH_STORAGE_SIZE}"
 <% else %>
-VARNISH_STORAGE="<%= scope.lookupvar('storage_type') %>,${VARNISH_STORAGE_FILE},${VARNISH_STORAGE_SIZE}"
+varnishd_storage="<%= scope.lookupvar('storage_type') %>,${VARNISH_STORAGE_FILE},${VARNISH_STORAGE_SIZE}"
 <% end %>
-
-#
-# # Default TTL used when the backend does not specify one
-VARNISH_TTL=<%= scope.lookupvar('varnish_ttl') %>
-#
-# # DAEMON_OPTS is used by the init script.  If you add or remove options, make
-# # sure you update this section, too.
 DAEMON_OPTS="-a ${VARNISH_LISTEN_ADDRESS}:${VARNISH_LISTEN_PORT} \
              -f ${VARNISH_VCL_CONF} \
              -T ${VARNISH_ADMIN_LISTEN_ADDRESS}:${VARNISH_ADMIN_LISTEN_PORT} \

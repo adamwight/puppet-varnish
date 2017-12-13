@@ -7,7 +7,7 @@ class varnish::ncsa (
     ensure => 'present',
     mode => '0644',
     owner => 'root',
-    group => 'root',
+    group   => 'wheel',
     content => template('varnish/varnishncsa-default.erb'),
     notify => Service['varnishncsa'],
   }

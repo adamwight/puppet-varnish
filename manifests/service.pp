@@ -32,7 +32,8 @@ class varnish::service (
 
   # varnish service
   service {'varnish':
+    name    => $varnish::params::service_name,
     ensure  => $service_state,
-    require => Package['varnish'],
+    require => Package[$varnish::params::package_name],
   }
 }

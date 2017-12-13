@@ -89,7 +89,7 @@ class varnish (
   if $shmlog_tempfs {
     class { 'varnish::shmlog':
       shmlog_dir => $shmlog_dir,
-      require => Package['varnish'],
+      require => Package[$varnish::params::package_name],
     }
   }
 
@@ -98,11 +98,11 @@ class varnish (
     ensure  => present,
     path    => $varnish::params::conf_file_path,
     owner   => 'root',
-    group   => 'root',
+    group   => 'wheel',
     mode    => '0644',
     content => template('varnish/varnish-conf.erb'),
-    require => Package['varnish'],
-    notify  => Service['varnish'],
+    require => Package[$varnish::params::package_name],
+    notify  => Service[$varnish::params::service_name],
   }
 
   # storage dir
@@ -110,6 +110,6 @@ class varnish (
   file { 'storage-dir':
     ensure  => directory,
     path    => $varnish_storage_dir,
-    require => Package['varnish'],
+    require => Package[$varnish::params::package_name],
   }
 }

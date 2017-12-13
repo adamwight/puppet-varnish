@@ -19,10 +19,12 @@
 
 class varnish::install (
   $version = present,
+  $package_name = $varnish::params::package_name,
 ) {
 
   # varnish package
   package { 'varnish':
+    name   => $package_name,
     ensure  => $version,
   }
 }

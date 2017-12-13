@@ -142,7 +142,7 @@ class varnish::vcl (
 	ensure => directory,	
     }
     $includefiles = ["probes", "backends", "directors", "acls", "backendselection", "waf"]
-    includefile { $includefiles: }
+    varnish::vcl::includefile { $includefiles: }
   }
 
   
@@ -152,7 +152,7 @@ class varnish::vcl (
     ensure  => present,
     path    => $varnish::varnish_vcl_conf,
     owner   => 'root',
-    group   => 'root',
+    group   => 'wheel',
     mode    => '0644',
     content => template($template_vcl),
     notify  => Service['varnish'],
