@@ -35,7 +35,7 @@ class varnish::ncsa (
     ensure  => 'file',
     mode    => '0644',
     owner   => 'root',
-    group   => 'root',
+    group   => 'wheel',
     content => template('varnish/varnishncsa-default.erb'),
     notify  => Service['varnishncsa'],
     require => Package['varnish'],

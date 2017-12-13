@@ -16,7 +16,7 @@ describe 'varnish::vcl', :type => :class do
     it { should contain_class('varnish') }
     it { should contain_file('varnish-vcl').with(
       'owner'   => 'root',
-      'group'   => 'root',
+      'group'   => 'wheel',
       'mode'    => '0644',
       'require' => 'Package[varnish]',
       'notify'  => 'Service[varnish]'

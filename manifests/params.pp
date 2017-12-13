@@ -65,6 +65,9 @@ class varnish::params {
       $service_name = 'varnishd'
       $package_name = 'varnish4'
       # TODO: $group = 'wheel'
+      $systemd = false
+      $systemd_conf_path = undef
+      $systemd_ncsa_conf_path = undef
     }
     default: {
       fail("Class['apache::params']: Unsupported osfamily: ${::osfamily}")

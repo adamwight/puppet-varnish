@@ -11,7 +11,7 @@ describe 'varnish::ncsa', :type => :class do
     it { should contain_file('/etc/default/varnishncsa').with(
       'ensure'  => 'file',
       'owner'   => 'root',
-      'group'   => 'root',
+      'group'   => 'wheel',
       'mode'    => '0644',
       'notify'  => 'Service[varnishncsa]'
       )
