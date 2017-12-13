@@ -38,27 +38,29 @@ class varnish::service (
   $reload_cmd = $::osfamily ? {
     'debian'    => '/etc/init.d/varnish reload',
     'redhat'    => '/sbin/service varnish reload',
+    'FreeBSD'   => '/usr/sbin/service varnishd reload',
     default     => undef,
   }
 
-  service {'varnish':
+  service {'varnishd':
     ensure  => $service_state,
     enable  => $enable,
     restart => $reload_cmd,
-    require => Package['varnish'],
+    require => Package[$::varnish::install::package_name],
   }
 
   $restart_command = $::osfamily ? {
     'debian'    => '/etc/init.d/varnish restart',
     'redhat'    => '/sbin/service varnish restart',
+    'FreeBSD'   => '/usr/sbin/service varnishd restart',
     default     => undef,
   }
 
   exec { 'restart-varnish':
     command     => $restart_command,
     refreshonly => true,
-    before      => Service['varnish'],
-    require     => Package['varnish'],
+    before      => Service['varnishd'],
+    require     => Package[$::varnish::install::package_name],
   }
 
   if $systemd {
@@ -68,8 +70,8 @@ class varnish::service (
       ensure  => file,
       content => template('varnish/varnish.service.erb'),
       notify  => Exec['Reload systemd'],
-      before  => [Service['varnish'], Exec['restart-varnish']],
-      require => Package['varnish'],
+      before  => [Service['varnishd'], Exec['restart-varnish']],
+      require => Package[$::varnish::install::package_name],
     }
   }
 }

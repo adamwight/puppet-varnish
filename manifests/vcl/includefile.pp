@@ -4,9 +4,9 @@ define varnish::vcl::includefile {
   $selectors = $varnish::vcl::selectors
   concat { "${varnish::vcl::includedir}/${title}.vcl":
     owner   => 'root',
-    group   => 'root',
+    group   => 'wheel',
     mode    => '0444',
-    notify  => Service['varnish'],
+    notify  => Service['varnishd'],
     require => File[$varnish::vcl::includedir],
     before  => Exec['restart-varnish'],
   }

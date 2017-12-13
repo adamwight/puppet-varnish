@@ -54,6 +54,12 @@ class varnish::params {
 
       }
     }
+    'FreeBSD': {
+      $conf_file_path = '/etc/rc.conf.d/varnishd'
+      $add_repo = false
+      $default_version ='4.1'
+      # TODO: $group = 'wheel'
+    }
     default: {
       fail("Class['apache::params']: Unsupported osfamily: ${::osfamily}")
     }

@@ -21,6 +21,6 @@ define varnish::director(
     target  => "${varnish::vcl::includedir}/directors.vcl",
     content => template($template_director),
     order   => '02',
-    notify  => Service['varnish'],
+    notify  => Service['varnishd'],
   }
 }

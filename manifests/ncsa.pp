@@ -25,10 +25,10 @@ class varnish::ncsa (
     ensure  => $format_ensure,
     mode    => '0644',
     owner   => 'root',
-    group   => 'root',
+    group   => 'wheel',
     content => $format_content,
     notify  => Service['varnishncsa'],
-    require => Package['varnish'],
+    require => Package[$::varnish::install::package_name],
   }
 
   file { '/etc/default/varnishncsa':
@@ -38,7 +38,7 @@ class varnish::ncsa (
     group   => 'root',
     content => template('varnish/varnishncsa-default.erb'),
     notify  => Service['varnishncsa'],
-    require => Package['varnish'],
+    require => Package[$::varnish::install::package_name],
   }
 
   $service_ensure = $enable ? {
@@ -49,7 +49,7 @@ class varnish::ncsa (
   service { 'varnishncsa':
     ensure    => $service_ensure,
     enable    => $enable,
-    require   => Service['varnish'],
+    require   => Service['varnishd'],
     subscribe => File['/etc/default/varnishncsa'],
   }
 
