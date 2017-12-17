@@ -50,11 +50,17 @@ sub vcl_recv {
     set req.http.Cookie = ";"+req.http.Cookie;
     set req.http.Cookie = regsuball(req.http.Cookie, "; +", ";");
     set req.http.Cookie = regsuball(req.http.Cookie, ";(<%- @cookiekeeps.each do |cookie| -%><%= cookie %><%- if cookie != @cookiekeeps[-1] -%>|<%-end-%><%-end-%>)=", "; \1=");
-    set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
+    # FIXME: bad regex erases the whole cookie:
+    #set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
     set req.http.Cookie = regsuball(req.http.Cookie, "^[; ]+|[; ]+$", "");
     if (req.http.Cookie == "") {
       unset req.http.Cookie;
     }
+  }
+
+  # Drop any cookies sent to Wordpress.
+  if (!(req.url ~ "wp-(login|admin)|preview=true")) {
+    unset req.http.cookie;
   }
 
   if (
