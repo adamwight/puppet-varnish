@@ -58,10 +58,10 @@ sub vcl_recv {
     }
   }
 
-  # Drop any cookies sent to Wordpress.
-  if (!(req.url ~ "wp-(login|admin)|preview=true")) {
-    unset req.http.cookie;
-  }
+  # Drop any cookies outside of Wordpress.
+  #if (!(req.url ~ "wp-(login|admin)|preview=true")) {
+    #unset req.http.cookie;
+  #}
 
   if (
 <%- if @cond_unset_cookies -%>
