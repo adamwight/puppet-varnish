@@ -18,11 +18,13 @@
 #                 default value: true
 # version       - the Varnish version to be installed (valid values are '3.0',
 #                 '4.0' and '4.1')
-# add_repo      - if set to false (defaults to true), the yum/apt repo is not added
+#                 default value: '3.0'
+# add_repo      - if set to false, the yum/apt repo is not added
+#                 default value: true
 #
 # === Default values
-# Set to Varnish default values
-# With an exception to
+# Left at their default values for the distribution's Varnish.
+# With the exception of,
 # - $storage_type, which is set to 'malloc' in this module
 # - $varnish_storage_file, path to which is changed to /var/lib/varnish-storage
 #                          this is done to avoid clash with $shmlog_dir

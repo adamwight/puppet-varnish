@@ -40,18 +40,38 @@ sub vcl_recv {
   }
 <%- end -%>
 
+if (req.http.X-Requested-With == "XMLHttpRequest") {
+  return(pass);
+}
+
+if (req.http.Authorization || req.method == "POST") {
+  return (pass);
+}
+
+if (req.method != "GET" && req.method != "HEAD") {
+  return (pass);
+}
+
+if (req.url ~ "(wp-admin|post\.php|edit\.php|wp-login)") {
+  return(pass);
+}
+if (req.url ~ "/wp-cron.php" || req.url ~ "preview=true") {
+  return (pass);
+}
+
 <%- if not @cond_requests -%>
   unset req.http.If-Modified-Since;
   unset req.http.If-None-Match;
 <%- end -%>
 
-  # cookie sanitization
+  # cookie sanitization, using a wacky leading-whitespace marker on cookies
+  # then deleting the non-matches.
+  # TODO: How could this be faster than C code to do the sanitization?
   if (req.http.Cookie) {
     set req.http.Cookie = ";"+req.http.Cookie;
     set req.http.Cookie = regsuball(req.http.Cookie, "; +", ";");
     set req.http.Cookie = regsuball(req.http.Cookie, ";(<%- @cookiekeeps.each do |cookie| -%><%= cookie %><%- if cookie != @cookiekeeps[-1] -%>|<%-end-%><%-end-%>)=", "; \1=");
-    # FIXME: bad regex erases the whole cookie:
-    #set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
+    set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
     set req.http.Cookie = regsuball(req.http.Cookie, "^[; ]+|[; ]+$", "");
     if (req.http.Cookie == "") {
       unset req.http.Cookie;
@@ -65,14 +85,10 @@ sub vcl_recv {
 
   if (
 <%- if @cond_unset_cookies -%>
-     <%= @cond_unset_cookies %>
+    <%= @cond_unset_cookies %> ||
 <%- else -%>
     # Static file cache
-    ((req.url ~ "(?i)\.(jpg|jpeg|gif|png|tiff|tif|svg|swf|ico|css|kss|js|vsd|doc|ppt|pps|xls|pdf|mp3|mp4|m4a|ogg|mov|avi|wmv|sxw|zip|gz|bz2|tar|rar|odc|odb|odf|odg|odi|odp|ods|odt|sxc|sxd|sxi|sxw|dmg|torrent|deb|msi|iso|rpm|jar|class|flv|exe)$")||
-    # Plone images cache
-    (req.url ~ "(?i)(image|imagem_large|image_preview|image_mini|image_thumb|image_tile|image_icon|imagem_listing)$")) &&
-    # Plone resource editor
-    (req.url !~ "(?i)\@\@plone\.resourceeditor\.getfile\?path\=")
+    (req.url ~ "(?i)\.(jpg|jpeg|gif|png|tiff|tif|svg|swf|ico|css|kss|js|vsd|doc|ppt|pps|xls|pdf|mp3|mp4|m4a|ogg|mov|avi|wmv|sxw|zip|gz|bz2|tar|rar|odc|odb|odf|odg|odi|odp|ods|odt|sxc|sxd|sxi|sxw|dmg|torrent|deb|msi|iso|rpm|jar|class|flv|exe)$")
 <%- end -%>
     ) {
     unset req.http.Cookie;
@@ -196,10 +212,6 @@ sub vcl_backend_response {
     set beresp.do_gzip = true;
   }
 
-  # Remove I18N_LANGUAGE Set-Cookie
-  if (beresp.http.Set-Cookie ~ "I18N_LANGUAGE") {
-    unset beresp.http.Set-Cookie;
-  }
   <%- if @honor_backend_ttl -%>
   # If no explicit TTL was set by the backend
   if (beresp.ttl < 0s) {
@@ -212,9 +224,7 @@ sub vcl_backend_response {
 
   if (
     # Static file cache
-    (bereq.url ~ "(?i)\.(jpg|jpeg|gif|png|tiff|tif|svg|swf|ico|css|kss|js|vsd|doc|ppt|pps|xls|pdf|mp3|mp4|m4a|ogg|mov|avi|wmv|sxw|zip|gz|bz2|tar|rar|odc|odb|odf|odg|odi|odp|ods|odt|sxc|sxd|sxi|sxw|dmg|torrent|deb|msi|iso|rpm|jar|class|flv|exe)$")||
-    # Plone images cache
-    (bereq.url ~ "(?i)(image|imagem_large|image_preview|image_mini|image_thumb|image_tile|image_icon|imagem_listing)$")
+    (bereq.url ~ "(?i)\.(jpg|jpeg|gif|png|tiff|tif|svg|swf|ico|css|kss|js|vsd|doc|ppt|pps|xls|pdf|mp3|mp4|m4a|ogg|mov|avi|wmv|sxw|zip|gz|bz2|tar|rar|odc|odb|odf|odg|odi|odp|ods|odt|sxc|sxd|sxi|sxw|dmg|torrent|deb|msi|iso|rpm|jar|class|flv|exe)$")
   ) {
     set beresp.ttl = <%= @static_cache_time %>;
     unset beresp.http.Set-Cookie;
