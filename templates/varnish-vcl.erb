@@ -21,6 +21,13 @@ sub vcl_recv {
   # Default grace period
   set req.grace = <%= @defaultgrace %>;
 <%- end -%>
+<%- if @logrealip -%> 
+  if (req.http.X-Forwarded-For) {
+     std.log("RealIP:" + req.http.X-Forwarded-For); 
+  } else {
+     std.log("RealIP:" + client.ip); 
+  }
+<%- end -%>
 
   unset req.http.If-Modified-Since;
   unset req.http.If-None-Match; 
@@ -47,11 +54,14 @@ sub vcl_recv {
      remove req.http.Cookie;
   }
 
+  <%- if @blockedips.length > 0 -%>
   # blocked list
   if ((client.ip ~ blockedips)<%- if @blockedbots.length > 0 -%>||(req.http.User-Agent ~ "(?i)<%- @blockedbots.each do |bot| -%><%= bot %><%- if cookie != @blockedbots[-1] -%>|<%-end-%><%-end-%>")<%-end-%>) {
       error 403 "Access forbidden.";
   }
+  <%- end -%>
 
+  <%- if @enable_waf -%>
   # Web Application Firewall
   # These rules are defined by a number between semicolons. Example: ;48;
   # All expections must be defined at the req.http.EXCE variable
@@ -67,10 +77,12 @@ sub vcl_recv {
   }
   remove req.http.EXCE;
   remove req.http.RULE;
+  <%- end -%>
 
   # backend selection logic
   include "includes/backendselection.vcl";
 
+  <%- if @purgeips.length > 0 -%>
   # Allows purge for the IPs in purge ACL
   if (req.request == "PURGE") {
     if (!(client.ip ~ purge)) {
@@ -84,6 +96,7 @@ sub vcl_recv {
     # request won't go to the backend.
     error 200 "Added ban.";      
   }
+  <%- end -%>
 
   if (req.request != "GET" &&
       req.request != "HEAD" &&

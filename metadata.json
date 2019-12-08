@@ -1,0 +1,76 @@
+{
+  "author": "Max Horlanchuk <max.horlanchuk@gmail.com>",
+  "checksums": {
+    "Gemfile": "cc73c011bf499756dc6c0b3a238db90c",
+    "LICENSE": "0e5ccf641e613489e66aa98271dbe798",
+    "Modulefile": "cefd47b8ca6bfe6b40547d29e323bc52",
+    "README.md": "9acc98b6a6b3509b18562db6a0b46cc5",
+    "Rakefile": "6ed92610a3ff19c0c68b30e19b3e33c7",
+    "manifests/acl.pp": "5543e2d9e4609aa62e61c61e4999b2ce",
+    "manifests/backend.pp": "dc8e5e98f3f1e6cd3afa9f8825053389",
+    "manifests/director.pp": "329ee6017501cf95576936cf34f90803",
+    "manifests/firewall.pp": "104132d85d30568eabdbeccda5be1861",
+    "manifests/init.pp": "f29e429c60278dd643e4823710daaa02",
+    "manifests/install.pp": "5ff4badd2547580edc9f3ffb5a7a6d75",
+    "manifests/ncsa.pp": "a890fd239f5def8b207de841dc008285",
+    "manifests/params.pp": "3eb1462d20635b45c1bacf320259582d",
+    "manifests/probe.pp": "859611eff54aeeaeed2167e373033cf0",
+    "manifests/repo.pp": "e5aa8827cd64a162ed845e92da9a2347",
+    "manifests/selector.pp": "5d3f300f373c589404addb0dfe2812e7",
+    "manifests/service.pp": "e7c1b0a60664d748d882f2a955c7e32c",
+    "manifests/shmlog.pp": "f9fa91603c22c294d2212318fd7dc76d",
+    "manifests/vcl.pp": "bfd640f7bc97b6feb1f397d494345615",
+    "spec/classes/varnish_ncsa_spec.rb": "474af6de19217fc8736d60a745ab4dfd",
+    "spec/classes/varnish_repo_spec.rb": "39172e547137b8d0b5ea0488db2987a1",
+    "spec/classes/varnish_service_spec.rb": "6592aec8f909ea20d9f35b0747974676",
+    "spec/classes/varnish_shmlog_spec.rb": "8f8d0450a45876278462ab00c45bb77d",
+    "spec/classes/varnish_spec.rb": "07c2ed97a6fcf9a4d36a9952e022cdd2",
+    "spec/classes/varnish_vcl_spec.rb": "97252f2625f0664b7b84ce64302779ec",
+    "spec/defines/acl_spec.rb": "df6b7cbe081bb05b67ae4cca91ae5b41",
+    "spec/spec.opts": "c407193b3d9028941ef59edd114f5968",
+    "spec/spec_helper.rb": "2598e0d4faa8b1c4ddb20f352e54811e",
+    "templates/includes/acls.vcl.erb": "d11e73cf5585647251e54df36a3eb651",
+    "templates/includes/backends.vcl.erb": "014f75fd405f14583c948643896618b8",
+    "templates/includes/backendselection.vcl.erb": "5d577549a3f4efe5b16844fe09370090",
+    "templates/includes/directors.vcl.erb": "f351d11152c91e951e9965e2b60e8337",
+    "templates/includes/probes.vcl.erb": "c00cad6963b59c55fc6e96bb1aebaa6a",
+    "templates/includes/waf.vcl.erb": "4d0c1f0b84754c10e2c4bc16cc2c5ebc",
+    "templates/varnish-conf.erb": "4ad3a801b71cb870b6c8b76826bcf8f5",
+    "templates/varnish-vcl.erb": "dda61cde46a0d005c84916cffa814d2d",
+    "templates/varnishncsa-default.erb": "a888ff3759cc6be86b2379efc6e2150e",
+    "tests/init.pp": "67bf92b5b6453d90daaa1da2efe307dd",
+    "tests/install.pp": "3d236f7f5e7bac59fde358492ee58b3b",
+    "tests/params.pp": "44bbfd219cfc0312ed11d04c1964ee7c",
+    "tests/service.pp": "47c7272262254406fcc0acc74cd40c93",
+    "tests/shmlog.pp": "a58e028bc35dc260497b18e4c8c45276",
+    "tests/vcl_backend_default.pp": "e9d1d48d9c872d8037ea892522bbdb51",
+    "tests/vcl_backends.pp": "b5001d566513c785073c59e1e97cf4f4",
+    "tests/vcl_backends_probes.pp": "6c866c7533c9b022f1a1f7563be952d2",
+    "tests/vcl_backends_probes_directors.pp": "6e11ebddd4f0ea6dcbf977e33bc8400d",
+    "tests/vcl_class_config_by_params.pp": "b8aa910858fcbcc2dc69b26cf259bb8f"
+  },
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib"
+    },
+    {
+      "name": "puppetlabs/concat"
+    },
+    {
+      "name": "puppetlabs/apt"
+    },
+    {
+      "name": "puppetlabs/firewall"
+    }
+  ],
+  "description": "Install, configure and manage VCL (Ubuntu/CentOS)",
+  "license": "Apache",
+  "name": "maxchk-varnish",
+  "project_page": "https://github.com/maxchk/puppet-varnish",
+  "source": "UNKNOWN",
+  "summary": "Varnish module",
+  "types": [
+
+  ],
+  "version": "1.0.0"
+}
