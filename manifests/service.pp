@@ -46,7 +46,7 @@ class varnish::service (
     name    => $service_name,
     ensure  => $service_state,
     enable  => $enable,
-    restart => $reload_cmd,
+    # restart => $reload_cmd,
     require => Package['varnish'],
   }
 
